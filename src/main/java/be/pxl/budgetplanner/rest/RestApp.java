@@ -1,6 +1,6 @@
 package be.pxl.budgetplanner.rest;
 
-import be.pxl.budgetplanner.data.Payment;
+import be.pxl.budgetplanner.beans.Payment;
 import be.pxl.budgetplanner.jpa.PaymentJPA;
 
 import javax.ws.rs.GET;

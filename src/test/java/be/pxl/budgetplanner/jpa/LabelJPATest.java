@@ -1,17 +1,13 @@
 package be.pxl.budgetplanner.jpa;
 
-import be.pxl.budgetplanner.data.Account;
-import be.pxl.budgetplanner.data.Label;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
+import be.pxl.budgetplanner.beans.Label;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class LabelJPATest {
@@ -19,7 +15,7 @@ public class LabelJPATest {
 
     @Before
     public void setUp() {
-        jpa = new LabelJPA();
+        jpa = new LabelJPA("budgetplanner-test");
     }
 
     @After
@@ -37,29 +33,28 @@ public class LabelJPATest {
     public void addLabel_AddsALabel() {
         Label label = createLabel();
         List<Label> labels = jpa.getLabels();
-        assertThat(labels, CoreMatchers.hasItems(label));
+        assertThat(labels, hasItems(label));
     }
 
     @Test
     public void getLabelById_ReturnsTheCorrectLabel() {
         Label label = createLabel();
         Label foundLabel = jpa.getLabel(label.getId());
-        assertThat(foundLabel, CoreMatchers.equalTo(label));
+        assertThat(foundLabel, equalTo(label));
     }
 
     @Test
     public void removeLabel_RemovesTheLabel() {
         Label label = createLabel();
-        jpa.removeLabel(label);
-        Label foundLabel = jpa.getLabel(label.getId());
-        assertThat(foundLabel, CoreMatchers.nullValue());
+        assertThat(jpa.removeLabel(label), equalTo(label));
+        assertThat(jpa.getLabel(label.getId()), nullValue());
     }
 
     private Label createLabel() {
         Label label = new Label();
         label.setName("ACoolName");
         label.setDescription("An even cooler description");
-        jpa.addLabel(label);
+        assertThat(jpa.addLabel(label), equalTo(label));
         return label;
     }
 }

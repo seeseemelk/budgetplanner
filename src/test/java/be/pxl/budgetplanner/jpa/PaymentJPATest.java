@@ -1,8 +1,8 @@
 package be.pxl.budgetplanner.jpa;
 
-import be.pxl.budgetplanner.data.Account;
-import be.pxl.budgetplanner.data.Payment;
-import org.hamcrest.CoreMatchers;
+import be.pxl.budgetplanner.beans.Account;
+import be.pxl.budgetplanner.beans.Label;
+import be.pxl.budgetplanner.beans.Payment;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,15 +10,39 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class PaymentJPATest {
     private PaymentJPA jpa;
+    private Account anyAccount;
+    private Account anyCounterAccount;
+    private Label anyLabel;
+    private Payment anyPayment;
 
     @Before
     public void setUp() {
-        jpa = new PaymentJPA();
+        jpa = new PaymentJPA("budgetplanner-test");
+
+        anyAccount = new Account();
+        anyAccount.setName("Account Name");
+
+        anyCounterAccount = new Account();
+        anyCounterAccount.setName("Counter Account Name");
+
+        anyLabel = new Label();
+        anyLabel.setName("Label Name");
+
+        anyPayment = new Payment();
+        anyPayment.setAmount(10f);
+        anyPayment.setCurrency("euro");
+        anyPayment.setDetail("Details");
+        anyPayment.setDate(LocalDateTime.now());
+        anyPayment.setAccount(anyAccount);
+        anyPayment.setCounterAccount(anyCounterAccount);
+        anyPayment.setLabel(anyLabel);
     }
 
     @After
@@ -34,19 +58,18 @@ public class PaymentJPATest {
 
     @Test
     public void addPayment_PaymentAdded() {
-        Account account = new Account();
-        account.setName("account name");
+        jpa.addPayment(anyPayment);
+        Payment addedPayment = jpa.getPayment(anyPayment.getId());
+        assertThat(addedPayment, equalTo(anyPayment));
+        assertThat(addedPayment.getAccount(), equalTo(anyAccount));
+        assertThat(addedPayment.getCounterAccount(), equalTo(anyCounterAccount));
+        assertThat(addedPayment.getLabel(), equalTo(anyLabel));
+    }
 
-        Payment payment = new Payment();
-        payment.setAmount(10f);
-        payment.setCurrency("euro");
-        payment.setDetail("detail");
-        payment.setDate(LocalDateTime.now());
-        payment.setAccount(account);
-
-        jpa.addPayment(payment);
-        Payment addedPayment = jpa.getPayment(payment.getId());
-        assertThat(addedPayment, CoreMatchers.equalTo(payment));
-        assertThat(addedPayment.getAccount(), CoreMatchers.equalTo(account));
+    @Test
+    public void removePayment_PaymentRemoved() {
+        assertThat(jpa.addPayment(anyPayment), equalTo(anyPayment));
+        assertThat(jpa.removePayment(anyPayment), equalTo(anyPayment));
+        assertThat(jpa.getPayment(anyPayment.getId()), nullValue());
     }
 }

@@ -1,4 +1,4 @@
-package be.pxl.budgetplanner.data;
+package be.pxl.budgetplanner.beans;
 
 import javax.persistence.*;
 import java.util.Objects;

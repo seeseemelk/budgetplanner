@@ -1,4 +1,4 @@
-package be.pxl.budgetplanner.data;
+package be.pxl.budgetplanner.beans;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,7 +37,7 @@ public class Payment {
      * Er is een vaste set van labels die gebruikt
      * kunnen worden om een payment aan te duiden.
      */
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "labelId")
     private Label label;
 

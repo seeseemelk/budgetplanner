@@ -1,30 +1,54 @@
 package be.pxl.budgetplanner.jpa;
 
 import be.pxl.budgetplanner.dao.AccountDAO;
-import be.pxl.budgetplanner.data.Account;
+import be.pxl.budgetplanner.beans.Account;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.util.List;
 
-public class AccountJPA implements AccountDAO {
-    //private EntityManagerFactory;
-
-    private void connect()
+public class AccountJPA extends BaseJPA implements AccountDAO {
+    public AccountJPA()
     {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("budgetplanner");
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        tx.commit();
-        em.close();
-        emf.close();
+    }
+
+    public AccountJPA(String persistenceUnitName)
+    {
+        super(persistenceUnitName);
     }
 
     @Override
-    public List<Account> getAccounts() {
-        throw new UnsupportedOperationException("Not yet supported");
+    public List<Account> getAccounts()
+    {
+        EntityTransaction transaction = startTransaction();
+        List<Account> accounts = em.createQuery("from Account", Account.class).getResultList();
+        closeTransaction(transaction);
+        return accounts;
+    }
+
+    @Override
+    public Account getAccount(int id)
+    {
+        EntityTransaction transaction = startTransaction();
+        Account account = em.find(Account.class, id);
+        closeTransaction(transaction);
+        return account;
+    }
+
+    @Override
+    public Account addAccount(Account account)
+    {
+        EntityTransaction transaction = startTransaction();
+        em.persist(account);
+        closeTransaction(transaction);
+        return account;
+    }
+
+    @Override
+    public Account removeAccount(Account account)
+    {
+        EntityTransaction transaction = startTransaction();
+        em.remove(account);
+        closeTransaction(transaction);
+        return account;
     }
 }
