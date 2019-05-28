@@ -20,7 +20,7 @@ public class AccountJPA extends BaseJPA implements AccountDAO {
     public List<Account> getAccounts()
     {
         EntityTransaction transaction = startTransaction();
-        List<Account> accounts = em.createQuery("from Account", Account.class).getResultList();
+        List<Account> accounts = em.createQuery("select a from Account a", Account.class).getResultList();
         closeTransaction(transaction);
         return accounts;
     }

@@ -10,6 +10,11 @@ import java.util.List;
 
 @Path("/")
 public class RestApp {
+    public RestApp() throws ClassNotFoundException
+    {
+        Class.forName("org.h2.Driver");
+    }
+
     @Path("/payments")
     @GET
     public List<Payment> getPayments() throws Exception {

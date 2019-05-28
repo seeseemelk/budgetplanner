@@ -19,7 +19,7 @@ public class PaymentJPA extends BaseJPA implements PaymentDAO {
     @Override
     public List<Payment> getPayments() {
         EntityTransaction tx = startTransaction();
-        List<Payment> payment = em.createQuery("from Payment", Payment.class).getResultList();
+        List<Payment> payment = em.createQuery("select p from Payment p", Payment.class).getResultList();
         closeTransaction(tx);
         return payment;
     }

@@ -21,8 +21,10 @@ abstract public class BaseJPA implements AutoCloseable
 
 	@Override
 	public void close() throws Exception {
-		em.close();
-		emf.close();
+		if (em.isOpen())
+			em.close();
+		if (emf.isOpen())
+			emf.close();
 	}
 
 	protected EntityTransaction startTransaction() {
